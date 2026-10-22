@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Syncoria Clock</title>
+<style>
+:root{--navy:#1E2A38;--navy2:#2A3A4D;--brass:#B08D57;--ivory:#F7F3EC;--ink:#1E2A38}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%;background:transparent}
+body{font-family:"Avenir Next","Helvetica Neue",Helvetica,Arial,sans-serif;overflow:hidden}
+.card{position:absolute;inset:0;border-radius:4px;background:radial-gradient(120% 90% at 30% 10%,var(--navy2) 0%,var(--navy) 60%,#16202c 100%);
+ display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5vh;color:var(--ivory)}
+.card:after{content:"";position:absolute;inset:6px;border:1px solid rgba(176,141,87,.55);border-radius:2px;pointer-events:none}
+.kick{font-family:"Hoefler Text",Baskerville,Georgia,serif;font-style:italic;font-size:clamp(10px,min(9vw,8vh),18px);color:rgba(247,243,236,.72)}
+.tiles{display:flex;align-items:center;gap:3vw}
+.tile{position:relative;width:min(33vw,30vh);aspect-ratio:.82/1;background:var(--ivory);border-radius:5px;
+ box-shadow:0 4px 10px rgba(0,0,0,.35);display:flex;align-items:center;justify-content:center;overflow:hidden}
+.tile:before{content:"";position:absolute;left:0;right:0;top:50%;height:1px;background:rgba(30,42,56,.18)}
+.tile:after{content:"";position:absolute;left:0;right:0;top:0;height:50%;background:linear-gradient(rgba(0,0,0,.04),rgba(0,0,0,0))}
+.tile span{font-family:"Hoefler Text",Baskerville,Georgia,serif;font-size:min(20vw,19vh);line-height:1;color:var(--ink)}
+.colon{font-family:Georgia,serif;font-size:min(14vw,13vh);color:var(--brass);line-height:1;margin-top:-1vh}
+.ampm{font-size:clamp(7px,min(6vw,6vh),11px);letter-spacing:.14em;color:var(--brass);font-weight:600;margin-top:-3vh}
+.day{font-size:clamp(8px,min(7.5vw,7vh),13px);letter-spacing:.3em;text-transform:uppercase;color:var(--brass);font-weight:600}
+.date{font-family:"Hoefler Text",Baskerville,Georgia,serif;font-size:clamp(11px,min(11vw,10vh),20px);color:var(--ivory);margin-top:-3vh}
+</style></head><body>
+<div class="card">
+  <div class="kick">today is</div>
+  <div class="tiles">
+    <div class="tile"><span id="h">09</span></div>
+    <div class="colon">:</div>
+    <div class="tile"><span id="m">41</span></div>
+  </div>
+  <div class="ampm" id="ap"></div>
+  <div class="day" id="d">Thursday</div>
+  <div class="date" id="t">22 October</div>
+</div>
+<script>
+const h12 = (()=>{try{return new Intl.DateTimeFormat(undefined,{hour:'numeric'}).resolvedOptions().hour12}catch(e){return false}})();
+function tick(){
+  const n=new Date(); let H=n.getHours(); let ap='';
+  if(h12){ap=H<12?'AM':'PM'; H=H%12||12;}
+  document.getElementById('h').textContent=String(H).padStart(2,'0');
+  document.getElementById('m').textContent=String(n.getMinutes()).padStart(2,'0');
+  const a=document.getElementById('ap'); a.textContent=ap; a.style.display=ap?'':'none';
+  document.getElementById('d').textContent=n.toLocaleDateString('en-US',{weekday:'long'});
+  document.getElementById('t').textContent=n.getDate()+' '+n.toLocaleDateString('en-US',{month:'long'});
+}
+tick(); setInterval(tick,1000);
+</script>
+</body></html>
